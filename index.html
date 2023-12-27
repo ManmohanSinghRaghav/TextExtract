@@ -1,9 +1,13 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
     <title>Scanner</title>
     <meta charset="utf-8">
+    <link rel="shortcut icon"
+        href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiBmaWxsPSJjdXJyZW50Q29sb3IiIGNsYXNzPSJiaSBiaS11cGMtc2NhbiIgdmlld0JveD0iMCAwIDE2IDE2Ij4NCiAgICA8cGF0aCBkPSJNMS41IDFhLjUuNSAwIDAgMC0uNS41djNhLjUuNSAwIDAgMS0xIDB2LTNBMS41IDEuNSAwIDAgMSAxLjUgMGgzYS41LjUgMCAwIDEgMCAxaC0zek0xMSAuNWEuNS41IDAgMCAxIC41LS41aDNBMS41IDEuNSAwIDAgMSAxNiAxLjV2M2EuNS41IDAgMCAxLTEgMHYtM2EuNS41IDAgMCAwLS41LS41aC0zYS41LjUgMCAwIDEtLjUtLjV6TS41IDExYS41LjUgMCAwIDEgLjUuNXYzYS41LjUgMCAwIDAgLjUuNWgzYS41LjUgMCAwIDEgMCAxaC0zQTEuNSAxLjUgMCAwIDEgMCAxNC41di0zYS41LjUgMCAwIDEgLjUtLjV6bTE1IDBhLjUuNSAwIDAgMSAuNS41djNhMS41IDEuNSAwIDAgMS0xLjUgMS41aC0zYS41LjUgMCAwIDEgMC0xaDNhLjUuNSAwIDAgMCAuNS0uNXYtM2EuNS41IDAgMCAxIC41LS41ek0zIDQuNWEuNS41IDAgMCAxIDEgMHY3YS41LjUgMCAwIDEtMSAwdi03em0yIDBhLjUuNSAwIDAgMSAxIDB2N2EuNS41IDAgMCAxLTEgMHYtN3ptMiAwYS41LjUgMCAwIDEgMSAwdjdhLjUuNSAwIDAgMS0xIDB2LTd6bTIgMGEuNS41IDAgMCAxIC41LS41aDFhLjUuNSAwIDAgMSAuNS41djdhLjUuNSAwIDAgMS0uNS41aC0xYS41LjUgMCAwIDEtLjUtLjV2LTd6bTMgMGEuNS41IDAgMCAxIDEgMHY3YS41LjUgMCAwIDEtMSAwdi03eiIgLz4NCjwvc3ZnPg=="
+        type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
     </script>
@@ -11,7 +15,7 @@
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 </head>
 
-<body>
+<body  class="d-flex flex-column min-vh-100">
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <div class="container">
@@ -27,18 +31,19 @@
     </header>
     <main>
         <div class="mb-3 mx-3 my-5">
-            <label for="" class="form-label">Choose file</label>
             <input type="file" class="form-control" name="imgData" id="imgData" placeholder="Choose File.."
                 aria-describedby="fileHelpId">
-            <button type="button" class="btn btn-primary my-3" id="submitData" data-bs-toggle="button">Extract</button>
             <div id="fileHelpId" class="form-text mx-4">Choose an image to extract text.</div>
+            <button type="button" class="btn btn-primary my-3" id="submitData" data-bs-toggle="button">Extract</button>
         </div>
         <div class="container">
-            <p class="dipData">Hello</p>
+            <p class="pd container border"></p>
+            <p class="dipData container"></p>
         </div>
     </main>
-    <footer>
-        <!-- place footer here -->
+    <footer class="container py-2 border-top mt-auto" style="min-width: 98vw;">
+        <p class="mb-0 text-muted">By <b>Manmohan Singh</b></p>
+        </a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
@@ -49,17 +54,24 @@
     <script>
         $('#submitData').click(function () {
             var formData = new FormData();
+            document.querySelector('.dipData').textContent = '';
             formData.append('image', $('#imgData')[0].files[0]);
-            console.log(formData);
             $.ajax({
                 method: 'POST',
                 url: 'https://api.api-ninjas.com/v1/imagetotext',
+                headers: { 'X-Api-Key': '4VPC259VmwUaCS9JNsFDHA==nYDLpAyVe6QJtQre' },
                 data: formData,
                 enctype: 'multipart/form-data',
                 processData: false,
                 contentType: false,
                 success: function (result) {
-                    console.log(result);
+                    for (var i = 0; i < result.length; i++) {
+                        document.querySelector('.pd').style.width = '100vw';
+                        document.querySelector('.pd').style.height = '100vh';
+                        document.querySelector('.pd').style.background = `url(${$('#imgData')[0].files[0].name}) no-repeat center `;
+                        console.log(document.querySelector('#imgData').files[0].name);
+                        document.querySelector('.dipData').textContent += `${result[i]['text']}`;
+                    }
                 },
                 error: function ajaxError(jqXHR, textStatus, errorThrown) {
                     alert(jqXHR.responseText);
